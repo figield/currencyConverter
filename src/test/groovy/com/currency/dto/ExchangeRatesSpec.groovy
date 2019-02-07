@@ -18,7 +18,7 @@ class ExchangeRatesSpec extends Specification {
         then:
             exchangeRates.base == "USD"
             exchangeRates.date == "2019-02-02"
-            exchangeRates.rates.equals(rates)
+            exchangeRates.rates == rates
 
     }
 

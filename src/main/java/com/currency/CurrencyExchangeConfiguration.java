@@ -1,6 +1,6 @@
 package com.currency;
 
-import com.currency.service.ExchangeService;
+import com.currency.domain.ExchangeService;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

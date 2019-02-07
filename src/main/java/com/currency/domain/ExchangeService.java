@@ -1,8 +1,8 @@
-package com.currency.service;
+package com.currency.domain;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.util.Map;
+import java.util.Optional;
 
 import com.currency.dto.AverageExchangeRatesResponse;
 import com.currency.dto.ExchangeRates;
@@ -21,7 +21,6 @@ public class ExchangeService {
     private RestTemplate restTemplate;
     private String BASE_URL;
 
-
     public ExchangeRates latest(String base) {
 
         URI targetUrl = UriComponentsBuilder.fromUriString(BASE_URL)
@@ -31,9 +30,7 @@ public class ExchangeService {
                                             .encode()
                                             .toUri();
 
-        ExchangeRates exchangeRates = restTemplate.getForObject(targetUrl, ExchangeRates.class);
-
-        return exchangeRates;
+        return restTemplate.getForObject(targetUrl, ExchangeRates.class);
     }
 
     public ExchangeRates convert(BigDecimal fromAmount, String fromCurrency, String toCurrency) {
@@ -49,13 +46,14 @@ public class ExchangeService {
         ExchangeRates exchangeRates = restTemplate.getForObject(targetUrl, ExchangeRates.class);
 
         BigDecimal toValue = exchangeRates.getRates().get(toCurrency);
+
+        // create response objects
+        // move to operations
         exchangeRates.getRates().put(toCurrency, fromAmount.multiply(toValue));
         exchangeRates.getRates().put(fromCurrency, fromAmount);
 
         return exchangeRates;
-
     }
-
 
 // convert date from 12/27/2017 to 2017-12-27
 // GET https://api.exchangeratesapi.io/history?start_at=2018-01-01&end_at=2018-09-01&symbols=ILS,JPY HTTP/1.1
@@ -74,25 +72,17 @@ public class ExchangeService {
 
         HistoricalExchangeRates historicalExchangeRates = restTemplate.getForObject(targetUrl, HistoricalExchangeRates.class);
 
-        Map<String, Map<String, BigDecimal>> rates = historicalExchangeRates.getRates();
+        BigDecimal average = ExchangeOperations.getAverageCurrencyValue(
+            toCurrency,
+            Optional.of(historicalExchangeRates.getRates()));
 
-        BigDecimal average = getAverageCurrencyValue(toCurrency, rates);
+        return AverageExchangeRatesResponse.builder()
+                                           .start_at(startDate)
+                                           .end_at(endDate)
+                                           .base(fromCurrency)
+                                           .average(average)
+                                           .build();
 
-        return AverageExchangeRatesResponse
-            .builder()
-            .start_at(startDate)
-            .end_at(endDate)
-            .base(fromCurrency)
-            .average(average).build();
-
-    }
-
-    private BigDecimal getAverageCurrencyValue(String toCurrency, Map<String, Map<String, BigDecimal>> rates) {
-        return rates.values()
-                                      .stream()
-                                      .map(m -> m.get(toCurrency))
-                                      .reduce(BigDecimal.ZERO, BigDecimal::add)
-                                      .divide(BigDecimal.valueOf(rates.values().size()));
     }
 
 

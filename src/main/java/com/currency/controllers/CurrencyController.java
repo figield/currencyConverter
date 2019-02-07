@@ -5,8 +5,7 @@ import java.math.BigDecimal;
 
 import com.currency.dto.AverageExchangeRatesResponse;
 import com.currency.dto.ExchangeRates;
-import com.currency.dto.HistoricalExchangeRates;
-import com.currency.service.ExchangeService;
+import com.currency.domain.ExchangeService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-// problem with EURO currency conversion
-
+// problem with EURO to EURO currency conversion
+// https://api.exchangeratesapi.io/latest?symbols=EUR&base=EUR
 @RestController
 @AllArgsConstructor
 @Slf4j
@@ -27,6 +26,7 @@ public class CurrencyController {
     private final ExchangeService exchangeService;
 
 
+    // Add cash for latest
     @RequestMapping("/latest")
     @GetMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     public ExchangeRates latest(
@@ -44,10 +44,10 @@ public class CurrencyController {
     @GetMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     public ExchangeRates convert(
         @RequestParam(value = "fromamount", defaultValue = "1") BigDecimal fromamount,
-        @RequestParam(value = "from", defaultValue = "USD") String from,
-        @RequestParam(value = "to", defaultValue = "PLN") String to) {
+        @RequestParam(value = "from", defaultValue = "USD") String fromCurrency,
+        @RequestParam(value = "to", defaultValue = "PLN") String toCurrency) {
 
-        ExchangeRates es = exchangeService.convert(fromamount, from, to);
+        ExchangeRates es = exchangeService.convert(fromamount, fromCurrency, toCurrency);
 
         log.info("{}", es);
 
@@ -58,12 +58,12 @@ public class CurrencyController {
     @RequestMapping("/average")
     @GetMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     public AverageExchangeRatesResponse average(
-        @RequestParam(value = "from", defaultValue = "USD") String from,
-        @RequestParam(value = "to", defaultValue = "PLN") String to,
+        @RequestParam(value = "from", defaultValue = "USD") String fromCurrency,
+        @RequestParam(value = "to", defaultValue = "PLN") String toCurrency,
         @RequestParam(value = "start_at") String startDate,
         @RequestParam(value = "end_at") String endDate) {
 
-        AverageExchangeRatesResponse es = exchangeService.average(from, to, startDate, endDate);
+        AverageExchangeRatesResponse es = exchangeService.average(fromCurrency, toCurrency, startDate, endDate);
 
         log.info("{}", es);
 
