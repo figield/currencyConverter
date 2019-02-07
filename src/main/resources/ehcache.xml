@@ -17,7 +17,7 @@
            maxEntriesLocalHeap="10000"
            maxEntriesLocalDisk="100000"
            eternal="false"
-           diskSpoolBufferSizeMB="20"
+           diskSpoolBufferSizeMB="10"
            timeToIdleSeconds="300"
            timeToLiveSeconds="600"
            memoryStoreEvictionPolicy="LFU"
@@ -29,12 +29,37 @@
            maxEntriesLocalHeap="10000"
            maxEntriesLocalDisk="100000"
            eternal="false"
-           diskSpoolBufferSizeMB="20"
+           diskSpoolBufferSizeMB="10"
            timeToIdleSeconds="300"
            timeToLiveSeconds="600"
            memoryStoreEvictionPolicy="LFU"
            transactionalMode="off">
         <persistence strategy="localTempSwap" />
     </cache>
+
+    <cache name="latest"
+           maxEntriesLocalHeap="1000"
+           maxEntriesLocalDisk="10000"
+           eternal="false"
+           diskSpoolBufferSizeMB="10"
+           timeToIdleSeconds="120"
+           timeToLiveSeconds="300"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off">
+        <persistence strategy="localTempSwap" />
+    </cache>
+
+    <cache name="standarddeviation"
+           maxEntriesLocalHeap="10000"
+           maxEntriesLocalDisk="100000"
+           eternal="false"
+           diskSpoolBufferSizeMB="10"
+           timeToIdleSeconds="600"
+           timeToLiveSeconds="1200"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off">
+        <persistence strategy="localTempSwap" />
+    </cache>
+
 
 </ehcache>

@@ -2,9 +2,12 @@ package com.currency.domain;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.currency.dto.AverageExchangeRatesResponse;
+import com.currency.dto.CurrencyStandardDeviationsResponse;
 import com.currency.dto.ExchangeRates;
 import com.currency.dto.HistoricalExchangeRates;
 import lombok.RequiredArgsConstructor;
@@ -72,7 +75,7 @@ public class ExchangeService {
 
         HistoricalExchangeRates historicalExchangeRates = restTemplate.getForObject(targetUrl, HistoricalExchangeRates.class);
 
-        BigDecimal average = ExchangeOperations.getAverageCurrencyValue(
+        BigDecimal average = ExchangeOperations.getAverageForCurrencyValue(
             toCurrency,
             Optional.of(historicalExchangeRates.getRates()));
 
@@ -82,9 +85,31 @@ public class ExchangeService {
                                            .base(fromCurrency)
                                            .average(average)
                                            .build();
-
     }
 
+    public CurrencyStandardDeviationsResponse standard_deviation(String base, String startDate, String endDate) {
 
+        URI targetUrl = UriComponentsBuilder.fromUriString(BASE_URL)
+                                            .path("/history")
+                                            .queryParam("base", base)
+                                            .queryParam("start_at", startDate)
+                                            .queryParam("end_at", endDate)
+                                            .build()
+                                            .encode()
+                                            .toUri();
+
+        HistoricalExchangeRates historicalExchangeRates = restTemplate.getForObject(targetUrl, HistoricalExchangeRates.class);
+
+        Map<String, BigDecimal> ratesStandardDeviation = ExchangeOperations
+            .getStandardDeviationValues(Optional.of(historicalExchangeRates.getRates()));
+
+
+        return CurrencyStandardDeviationsResponse.builder()
+                                                 .start_at(startDate)
+                                                 .end_at(endDate)
+                                                 .base(base)
+                                                 .ratesStandardDeviation(ratesStandardDeviation)
+                                                 .build();
+    }
 
 }

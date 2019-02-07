@@ -4,6 +4,7 @@ package com.currency.controllers;
 import java.math.BigDecimal;
 
 import com.currency.dto.AverageExchangeRatesResponse;
+import com.currency.dto.CurrencyStandardDeviationsResponse;
 import com.currency.dto.ExchangeRates;
 import com.currency.domain.ExchangeService;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class CurrencyController {
     private final ExchangeService exchangeService;
 
 
-    // Add cash for latest
+    @Cacheable(value = "latest")
     @RequestMapping("/latest")
     @GetMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
     public ExchangeRates latest(
@@ -69,5 +70,22 @@ public class CurrencyController {
 
         return es;
     }
+
+
+    @Cacheable(value = "standarddeviation")
+    @RequestMapping("/sd")
+    @GetMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+    public CurrencyStandardDeviationsResponse standard_deviation(
+        @RequestParam(value = "base", defaultValue = "EUR") String base,
+        @RequestParam(value = "start_at") String startDate,
+        @RequestParam(value = "end_at") String endDate) {
+
+        CurrencyStandardDeviationsResponse sd = exchangeService.standard_deviation(base, startDate, endDate);
+
+        log.info("{}", sd);
+
+        return sd;
+    }
+
 
 }

@@ -18,7 +18,7 @@ public class HistoricalExchangeRates implements Serializable {
     private String base;
     private String start_at;
     private String end_at;
-    private Map<String, Map<String, BigDecimal>> rates = new HashMap<>();
+    private Map<String, Map<String, BigDecimal>> rates;
 
 
 }
