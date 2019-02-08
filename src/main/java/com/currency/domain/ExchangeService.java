@@ -50,16 +50,15 @@ public class ExchangeService {
 
         BigDecimal toValue = exchangeRates.getRates().get(toCurrency);
 
-        // create response objects
-        // move to operations
+
+        // TODO: create response objects
+        // TODO: move to operations
         exchangeRates.getRates().put(toCurrency, fromAmount.multiply(toValue));
         exchangeRates.getRates().put(fromCurrency, fromAmount);
 
         return exchangeRates;
     }
 
-// convert date from 12/27/2017 to 2017-12-27
-// GET https://api.exchangeratesapi.io/history?start_at=2018-01-01&end_at=2018-09-01&symbols=ILS,JPY HTTP/1.1
 
     public AverageExchangeRatesResponse average(String fromCurrency, String toCurrency, String startDate, String endDate) {
 

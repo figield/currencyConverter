@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-// problem with EURO to EURO currency conversion
-// https://api.exchangeratesapi.io/latest?symbols=EUR&base=EUR
+// TODO: fix problem with EURO to EURO currency conversion
+// TODO: convert date from 12/27/2017 to 2017-12-27
+// TODO: move configuration to propertyc ex: https://api.exchangeratesapi.io/latest?symbols=EUR&base=EUR
 @RestController
 @AllArgsConstructor
 @Slf4j
