@@ -1,12 +1,17 @@
-package com.currency.controllers;
+package com.currency.api.controllers;
 
 
 import java.math.BigDecimal;
 
-import com.currency.dto.AverageExchangeRatesResponse;
-import com.currency.dto.CurrencyStandardDeviationsResponse;
-import com.currency.dto.ExchangeRates;
-import com.currency.domain.ExchangeService;
+import com.currency.api.dto.AverageExchangeRatesResponse;
+import com.currency.api.dto.CurrencyConvertionResponse;
+import com.currency.api.dto.CurrencyStandardDeviationsResponse;
+import com.currency.api.dto.LatestExchangeRatesResponse;
+import com.currency.domain.dto.AverageExchangeRates;
+import com.currency.domain.dto.CurrencyConvertion;
+import com.currency.domain.dto.CurrencyStandardDeviations;
+import com.currency.domain.dto.ExchangeRates;
+import com.currency.domain.service.ExchangeService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,7 +24,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 // TODO: fix problem with EURO to EURO currency conversion
 // TODO: convert date from 12/27/2017 to 2017-12-27
-// TODO: move configuration to propertyc ex: https://api.exchangeratesapi.io/latest?symbols=EUR&base=EUR
+// TODO: move configuration to property, ex: URL=https://api.exchangeratesapi.io
 @RestController
 @AllArgsConstructor
 @Slf4j
@@ -27,33 +32,32 @@ public class CurrencyController {
 
     private final ExchangeService exchangeService;
 
-
     @Cacheable(value = "latest")
     @RequestMapping("/latest")
     @GetMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
-    public ExchangeRates latest(
+    public LatestExchangeRatesResponse latest(
         @RequestParam(value = "base", defaultValue = "EUR") String base) {
 
-        ExchangeRates es = exchangeService.latest(base);
+        ExchangeRates exchangeRates = exchangeService.latest(base);
 
-        log.info("{}", es);
+        log.info("ExchangeRates: {}", exchangeRates);
 
-        return es;
+        return LatestExchangeRatesResponse.from(exchangeRates);
     }
 
     @Cacheable(value = "convert")
     @RequestMapping("/convert")
     @GetMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
-    public ExchangeRates convert(
+    public CurrencyConvertionResponse convert(
         @RequestParam(value = "fromamount", defaultValue = "1") BigDecimal fromamount,
         @RequestParam(value = "from", defaultValue = "USD") String fromCurrency,
         @RequestParam(value = "to", defaultValue = "PLN") String toCurrency) {
 
-        ExchangeRates es = exchangeService.convert(fromamount, fromCurrency, toCurrency);
+        CurrencyConvertion currencyConvertion = exchangeService.convert(fromamount, fromCurrency, toCurrency);
 
-        log.info("{}", es);
+        log.info("CurrencyConvertion: {}", currencyConvertion);
 
-        return es;
+        return CurrencyConvertionResponse.from(currencyConvertion);
     }
 
     @Cacheable(value = "average")
@@ -65,13 +69,12 @@ public class CurrencyController {
         @RequestParam(value = "start_at") String startDate,
         @RequestParam(value = "end_at") String endDate) {
 
-        AverageExchangeRatesResponse es = exchangeService.average(fromCurrency, toCurrency, startDate, endDate);
+        AverageExchangeRates averageExchangeRates = exchangeService.average(fromCurrency, toCurrency, startDate, endDate);
 
-        log.info("{}", es);
+        log.info("AverageExchangeRates: {}", averageExchangeRates);
 
-        return es;
+        return AverageExchangeRatesResponse.from(averageExchangeRates);
     }
-
 
     @Cacheable(value = "standarddeviation")
     @RequestMapping("/sd")
@@ -81,11 +84,11 @@ public class CurrencyController {
         @RequestParam(value = "start_at") String startDate,
         @RequestParam(value = "end_at") String endDate) {
 
-        CurrencyStandardDeviationsResponse sd = exchangeService.standard_deviation(base, startDate, endDate);
+        CurrencyStandardDeviations currencyStandardDeviations = exchangeService.standard_deviation(base, startDate, endDate);
 
-        log.info("{}", sd);
+        log.info("CurrencyStandardDeviations: {}", currencyStandardDeviations);
 
-        return sd;
+        return CurrencyStandardDeviationsResponse.from(currencyStandardDeviations);
     }
 
 

@@ -1,4 +1,4 @@
-package com.currency.controllers
+package com.currency.api.controllers
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc
 import io.restassured.module.mockmvc.specification.MockMvcRequestSpecification

@@ -39,7 +39,7 @@ dependencies {
     testCompile "org.spockframework:spock-spring:1.1-groovy-2.4"
    // testCompile 'io.rest-assured:rest-assured:3.3.0'
    // testCompile 'io.rest-assured:json-schema-validator:3.3.0'
-    testCompile 'io.rest-assured:spring-mock-mvc:3.3.0'
+    ////testCompile 'io.rest-assured:spring-mock-mvc:3.3.0'
 
 
 

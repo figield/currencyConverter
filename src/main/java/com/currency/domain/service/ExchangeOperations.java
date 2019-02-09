@@ -1,4 +1,4 @@
-package com.currency.domain;
+package com.currency.domain.service;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -25,6 +25,10 @@ class ExchangeOperations {
     static MathContext MATH_CONTEXT = new MathContext(PRECISION, HALF_UP);
     static int CURRENCY_LIST_LIMIT = 30;
 
+
+    static  BigDecimal getMultiplicationValue(BigDecimal rate, BigDecimal amount){
+        return rate.multiply(amount, MATH_CONTEXT);
+    }
 
     static BigDecimal getAverageForCurrencyValue(String toCurrency, Optional<Map<String, Map<String, BigDecimal>>> rates) {
         return rates.get()

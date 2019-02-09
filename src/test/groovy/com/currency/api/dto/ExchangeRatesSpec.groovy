@@ -1,5 +1,6 @@
-package com.currency.dto
+package com.currency.api.dto
 
+import com.currency.domain.dto.ExchangeRates
 import spock.lang.Specification
 
 class ExchangeRatesSpec extends Specification {
@@ -11,7 +12,7 @@ class ExchangeRatesSpec extends Specification {
             String date = "2019-02-02"
             Map<String, BigDecimal> rates = new HashMap<>().put("PLN", 3.7)
         when:
-            ExchangeRates exchangeRates = new ExchangeRates()
+        ExchangeRates exchangeRates = new ExchangeRates()
             exchangeRates.setBase(base)
             exchangeRates.setDate(date)
             exchangeRates.setRates(rates)
