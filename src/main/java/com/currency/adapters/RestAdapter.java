@@ -1,4 +1,4 @@
-package com.currency.adapter;
+package com.currency.adapters;
 
 import com.currency.domain.service.RestOperation;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class RestAdapter implements RestOperation {
     private RestTemplate restTemplate;
 
     @Nullable
-    public <T> T getForObject(URI url, Class<T> responseType) throws RestClientException {
+    public <T> T getCurrencyData(URI url, Class<T> responseType) throws RestClientException {
 
         return restTemplate.getForObject(url, responseType);
     }

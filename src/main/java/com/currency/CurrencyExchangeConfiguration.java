@@ -1,6 +1,6 @@
 package com.currency;
 
-import com.currency.adapter.RestAdapter;
+import com.currency.adapters.RestAdapter;
 import com.currency.domain.service.ExchangeService;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +19,6 @@ public class CurrencyExchangeConfiguration {
         String BASE_URL = "https://api.exchangeratesapi.io";
         return new ExchangeService(new RestAdapter(restTemplate), BASE_URL);
     }
-
 
 
 }

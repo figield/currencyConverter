@@ -10,8 +10,6 @@ public class ExchangeRates {
 
     private String base;
     private String date;
-    private String startDate;
-    private String endDate;
     private Map<String, BigDecimal> rates;
 
 }

@@ -1,26 +1,25 @@
-package com.currency.api.dto
+package com.currency.domain.dto
 
-import com.currency.domain.dto.ExchangeRates
 import spock.lang.Specification
 
 class ExchangeRatesSpec extends Specification {
-
 
     def "Should build ExchangeRates"() {
         given:
             String base = "USD"
             String date = "2019-02-02"
-            Map<String, BigDecimal> rates = new HashMap<>().put("PLN", 3.7)
+            Map<String, BigDecimal> rates = new HashMap<>()
+            rates.put("PLN", 3.7)
         when:
-        ExchangeRates exchangeRates = new ExchangeRates()
+            ExchangeRates exchangeRates = new ExchangeRates()
             exchangeRates.setBase(base)
             exchangeRates.setDate(date)
             exchangeRates.setRates(rates)
+
         then:
             exchangeRates.base == "USD"
             exchangeRates.date == "2019-02-02"
             exchangeRates.rates == rates
-
     }
 
 }
