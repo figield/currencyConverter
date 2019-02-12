@@ -16,7 +16,6 @@ public class ErrorResponse {
     @NonNull
     List<String> messages;
 
-
     public static ErrorResponse of(String errorMessage) {
         return ErrorResponse.builder()
                             .messages(Collections.singletonList(errorMessage))

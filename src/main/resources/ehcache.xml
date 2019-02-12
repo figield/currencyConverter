@@ -14,8 +14,8 @@
     defined on your system. On a standard Linux system this will be /tmp" -->
 
     <cache name="average"
-           maxEntriesLocalHeap="10000"
-           maxEntriesLocalDisk="100000"
+           maxEntriesLocalHeap="100000"
+           maxEntriesLocalDisk="1000000"
            eternal="false"
            diskSpoolBufferSizeMB="10"
            timeToIdleSeconds="300"
@@ -26,8 +26,8 @@
     </cache>
 
     <cache name="convert"
-           maxEntriesLocalHeap="10000"
-           maxEntriesLocalDisk="100000"
+           maxEntriesLocalHeap="100000"
+           maxEntriesLocalDisk="1000000"
            eternal="false"
            diskSpoolBufferSizeMB="10"
            timeToIdleSeconds="300"
@@ -38,8 +38,8 @@
     </cache>
 
     <cache name="latest"
-           maxEntriesLocalHeap="1000"
-           maxEntriesLocalDisk="10000"
+           maxEntriesLocalHeap="10000"
+           maxEntriesLocalDisk="100000"
            eternal="false"
            diskSpoolBufferSizeMB="10"
            timeToIdleSeconds="120"
@@ -50,8 +50,8 @@
     </cache>
 
     <cache name="standarddeviation"
-           maxEntriesLocalHeap="10000"
-           maxEntriesLocalDisk="100000"
+           maxEntriesLocalHeap="100000"
+           maxEntriesLocalDisk="1000000"
            eternal="false"
            diskSpoolBufferSizeMB="10"
            timeToIdleSeconds="600"

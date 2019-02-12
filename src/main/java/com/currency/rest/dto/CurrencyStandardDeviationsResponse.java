@@ -5,17 +5,16 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 import com.currency.domain.dto.CurrencyStandardDeviations;
+import com.currency.rest.utils.Log;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Data
 @Builder
-@Slf4j
 public class CurrencyStandardDeviationsResponse implements Serializable {
 
     private String base;
@@ -27,7 +26,7 @@ public class CurrencyStandardDeviationsResponse implements Serializable {
     private Map<String, BigDecimal> ratesStandardDeviation;
 
     public static CurrencyStandardDeviationsResponse from(CurrencyStandardDeviations currencyStandardDeviations) {
-        log.info("CurrencyStandardDeviations: {}", currencyStandardDeviations);
+        Log.info("CurrencyStandardDeviations: {}", currencyStandardDeviations);
         return CurrencyStandardDeviationsResponse
             .builder()
             .base(currencyStandardDeviations.getBase())

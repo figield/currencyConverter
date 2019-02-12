@@ -2,6 +2,7 @@ package com.currency;
 
 import com.currency.adapters.RestAdapter;
 import com.currency.domain.service.ExchangeService;
+import com.currency.domain.service.utils.ExchangeRestCalls;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,10 +16,12 @@ public class CurrencyExchangeConfiguration {
 
     @Bean
     public ExchangeService exchangeService() {
-        RestTemplate restTemplate = new RestTemplate();
-        String BASE_URL = "https://api.exchangeratesapi.io";
-        return new ExchangeService(new RestAdapter(restTemplate), BASE_URL);
+        return new ExchangeService(exchangeRestCalls());
     }
 
+    private ExchangeRestCalls exchangeRestCalls() {
+        String BASE_URL = "https://api.exchangeratesapi.io";
+        return new ExchangeRestCalls(new RestAdapter(new RestTemplate()), BASE_URL);
+    }
 
 }

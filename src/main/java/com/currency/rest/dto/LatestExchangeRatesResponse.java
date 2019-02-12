@@ -1,11 +1,11 @@
 package com.currency.rest.dto;
 
 import com.currency.domain.dto.ExchangeRates;
+import com.currency.rest.utils.Log;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,7 +16,6 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @Data
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Slf4j
 public class LatestExchangeRatesResponse implements Serializable {
 
     private String base;
@@ -25,7 +24,7 @@ public class LatestExchangeRatesResponse implements Serializable {
     private Map<String, BigDecimal> rates;
 
     public static LatestExchangeRatesResponse from(ExchangeRates exchangeRates) {
-        log.info("ExchangeRates: {}", exchangeRates);
+        Log.info("ExchangeRates: {}", exchangeRates);
         return LatestExchangeRatesResponse
             .builder()
             .base(exchangeRates.getBase())
@@ -33,5 +32,4 @@ public class LatestExchangeRatesResponse implements Serializable {
             .rates(exchangeRates.getRates())
             .build();
     }
-
 }

@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-// what more could be done:
-// TODO: fix problem with EURO to EURO currency conversion
 // TODO: move configuration to property, ex: URL=https://api.exchangeratesapi.io
 
 @RestController

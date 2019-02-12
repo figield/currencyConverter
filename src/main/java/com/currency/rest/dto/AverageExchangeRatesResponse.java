@@ -4,16 +4,15 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import com.currency.domain.dto.AverageExchangeRates;
+import com.currency.rest.utils.Log;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Data
 @Builder
-@Slf4j
 public class AverageExchangeRatesResponse implements Serializable {
 
     private String from;
@@ -25,7 +24,7 @@ public class AverageExchangeRatesResponse implements Serializable {
     private BigDecimal average;
 
     public static AverageExchangeRatesResponse from(AverageExchangeRates averageExchangeRates) {
-        log.info("AverageExchangeRates: {}", averageExchangeRates);
+        Log.info("AverageExchangeRates: {}", averageExchangeRates);
         return AverageExchangeRatesResponse
             .builder()
             .from(averageExchangeRates.getFrom())

@@ -38,13 +38,11 @@ public class ExceptionControllerAdvice {
                              .body(ErrorResponse.of(exception.getMessage()));
     }
 
-
-
     @Order(100)
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<ErrorResponse> httpClientExceptionHandler(ConstraintViolationException exception) {
 
-        log.error("Currency name must be 3 characters long: ", exception);
+        log.warn("Currency name must be 3 characters long: ", exception);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                              .contentType(MediaType.APPLICATION_JSON)
@@ -55,7 +53,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler({HttpClientErrorException.class})
     public ResponseEntity<ErrorResponse> httpClientExceptionHandler(HttpClientErrorException exception) {
 
-        log.error("Currency vendor exception: ", exception);
+        log.warn("Currency vendor exception: ", exception);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                              .contentType(MediaType.APPLICATION_JSON)
@@ -66,7 +64,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler({MethodArgumentTypeMismatchException.class})
     public ResponseEntity<ErrorResponse> httpClientExceptionHandler(MethodArgumentTypeMismatchException exception) {
 
-        log.error("Argument type mismatch exception:", exception);
+        log.warn("Argument type mismatch exception:", exception);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                              .contentType(MediaType.APPLICATION_JSON)
@@ -86,10 +84,10 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler({Throwable.class})
     public ResponseEntity internalServerErrorHandler(Throwable throwable) {
 
-        log.error("Fatal error", throwable);
+        log.error("Server is unable to process the request: ", throwable.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                              .contentType(MediaType.APPLICATION_JSON)
-                             .body(ErrorResponse.of("Server is unable to process the request."));
+                             .body(ErrorResponse.of("Server is unable to process the request"));
     }
 }
