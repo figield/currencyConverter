@@ -1,6 +1,5 @@
 package com.currency.rest.controllers;
 
-
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,6 +7,7 @@ import java.util.Date;
 import javax.validation.constraints.Size;
 
 import com.currency.domain.service.ExchangeService;
+import com.currency.domain.dto.ExchangeParams;
 import com.currency.rest.dto.AverageExchangeRatesResponse;
 import com.currency.rest.dto.CurrencyConvertionResponse;
 import com.currency.rest.dto.CurrencyStandardDeviationsResponse;
@@ -39,7 +39,8 @@ public class CurrencyController {
     public LatestExchangeRatesResponse latest(
         @RequestParam(value = "base", defaultValue = "EUR") @Size(max = 3, message = currencyLengthMsg) String base) {
 
-        return LatestExchangeRatesResponse.from(exchangeService.latest(base));
+        return LatestExchangeRatesResponse.from(
+            exchangeService.latest(base));
     }
 
     @Cacheable(value = "convert")
@@ -51,7 +52,12 @@ public class CurrencyController {
         @RequestParam(value = "to") @Size(min = 3, max = 3, message = currencyLengthMsg) String toCurrency) {
 
         return CurrencyConvertionResponse.from(
-            exchangeService.convert(fromAmount, fromCurrency, toCurrency));
+            exchangeService.convert(
+                ExchangeParams.builder()
+                              .amount(fromAmount)
+                              .from(fromCurrency)
+                              .to(toCurrency)
+                              .build()));
     }
 
     @Cacheable(value = "average")
@@ -65,10 +71,13 @@ public class CurrencyController {
 
         return AverageExchangeRatesResponse.from(
             exchangeService.average(
-                fromCurrency,
-                toCurrency,
-                dateFormat.format(startDate),
-                dateFormat.format(endDate)));
+                ExchangeParams.builder()
+                              .base(fromCurrency)
+                              .from(fromCurrency)
+                              .to(toCurrency)
+                              .startDate(dateFormat.format(startDate))
+                              .endDate(dateFormat.format(endDate))
+                              .build()));
     }
 
     @Cacheable(value = "standarddeviation")
@@ -81,9 +90,12 @@ public class CurrencyController {
 
         return CurrencyStandardDeviationsResponse.from(
             exchangeService.standard_deviation(
-                base,
-                dateFormat.format(startDate),
-                dateFormat.format(endDate)));
+                ExchangeParams.builder()
+                              .base(base)
+                              .from(base)
+                              .startDate(dateFormat.format(startDate))
+                              .endDate(dateFormat.format(endDate))
+                              .build()));
     }
 
 }

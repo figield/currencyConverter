@@ -1,17 +1,17 @@
 package com.currency.domain.service;
 
-import java.math.BigDecimal;
-
+import com.currency.domain.dto.ExchangeParams;
 import com.currency.domain.dto.AverageExchangeRates;
 import com.currency.domain.dto.CurrencyConvertion;
 import com.currency.domain.dto.CurrencyStandardDeviations;
 import com.currency.domain.dto.ExchangeRates;
-import com.currency.domain.dto.HistoricalExchangeRates;
 import com.currency.domain.service.utils.DateOperations;
 import com.currency.domain.service.utils.ExchangeCalculations;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import static java.math.BigDecimal.ONE;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -27,46 +27,53 @@ public class ExchangeService {
         return clientCallService.getLatestExchangeRate(base);
     }
 
-    public CurrencyStandardDeviations standard_deviation(String base, String startDate, String endDate) {
-        HistoricalExchangeRates historicalExchangeRates = clientCallService.getHistoricalExchangeRates(base, startDate, endDate);
-
-        return exchangeComputationService.standard_deviation(historicalExchangeRates, base, startDate, endDate);
+    public CurrencyStandardDeviations standard_deviation(ExchangeParams exchangeParams) {
+        return exchangeComputationService.standard_deviation(
+            clientCallService.getHistoricalExchangeRates(exchangeParams),
+            exchangeParams);
     }
 
-    public CurrencyConvertion convert(BigDecimal fromAmount, String fromCurrency, String toCurrency) {
+    public CurrencyConvertion convert(ExchangeParams exchangeParams) {
 
-        if (fromCurrency.equals(toCurrency)) {
-            return CurrencyConvertion.builder()
-                                     .date(DateOperations.getYesterdayDateString())
-                                     .fromAmount(fromAmount)
-                                     .fromCurrency(fromCurrency)
-                                     .toCurrency(toCurrency)
-                                     .toAmount(ExchangeCalculations.getMultiplicationValue(BigDecimal.valueOf(1), fromAmount))
-                                     .build();
+        if (exchangeParams.sameCurrency()) {
+            return getShortcutForCurrencyConvertion(exchangeParams);
         }
 
-        ExchangeRates exchangeRates = clientCallService.getLatestExchangeRate(fromCurrency);
-
-        return exchangeComputationService.convert(exchangeRates, fromAmount, fromCurrency, toCurrency);
-
+        return exchangeComputationService.convert(
+            clientCallService.getLatestExchangeRate(exchangeParams.getFrom()),
+            exchangeParams);
     }
 
-    public AverageExchangeRates average(String fromCurrency, String toCurrency, String startDate, String endDate) {
+    public AverageExchangeRates average(ExchangeParams exchangeParams) {
 
-        if (fromCurrency.equals(toCurrency)) {
-            return AverageExchangeRates.builder()
-                                       .startDate(startDate)
-                                       .endDate(endDate)
-                                       .from(fromCurrency)
-                                       .to(toCurrency)
-                                       .average(BigDecimal.valueOf(1))
-                                       .build();
+        if (exchangeParams.sameCurrency()) {
+            return getShortcutForAverageExchangeRates(exchangeParams);
         }
 
-        HistoricalExchangeRates historicalExchangeRates = clientCallService.getHistoricalExchangeRates(fromCurrency, startDate, endDate);
-
-        return exchangeComputationService.average(historicalExchangeRates, fromCurrency,  toCurrency,  startDate,  endDate);
-
+        return exchangeComputationService.average(
+            clientCallService.getHistoricalExchangeRates(exchangeParams),
+            exchangeParams);
     }
 
+    private AverageExchangeRates getShortcutForAverageExchangeRates(ExchangeParams exchangeParams) {
+        return AverageExchangeRates.builder()
+                                   .startDate(exchangeParams.getStartDate())
+                                   .endDate(exchangeParams.getEndDate())
+                                   .from(exchangeParams.getFrom())
+                                   .to(exchangeParams.getTo())
+                                   .average(ONE)
+                                   .build();
+    }
+
+    private CurrencyConvertion getShortcutForCurrencyConvertion(ExchangeParams exchangeParams) {
+        return CurrencyConvertion.builder()
+                                 .date(DateOperations.getYesterdayDateString())
+                                 .fromAmount(exchangeParams.getAmount())
+                                 .fromCurrency(exchangeParams.getFrom())
+                                 .toCurrency(exchangeParams.getTo())
+                                 .toAmount(
+                                     ExchangeCalculations.getMultiplicationValue(ONE,
+                                         exchangeParams.getAmount()))
+                                 .build();
+    }
 }

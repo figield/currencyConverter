@@ -76,7 +76,7 @@ class CurrencyControllerSpec extends Specification {
                             to,
                             toAmount)
         and:
-            exchangeService.convert(_, _, _) >> currencyConvertion
+            exchangeService.convert(_) >> currencyConvertion
 
         when:
             def results = mvc.perform(get('/convert')

@@ -2,6 +2,7 @@ package com.currency.domain.service;
 
 import java.net.URI;
 
+import com.currency.domain.dto.ExchangeParams;
 import com.currency.domain.dto.ExchangeRates;
 import com.currency.domain.dto.HistoricalExchangeRates;
 import lombok.AllArgsConstructor;
@@ -28,12 +29,12 @@ public class ClientCallService {
     }
 
 
-    HistoricalExchangeRates getHistoricalExchangeRates(String fromCurrency, String startDate, String endDate) {
+    HistoricalExchangeRates getHistoricalExchangeRates(ExchangeParams exchangeParams) {
         URI targetUrl = UriComponentsBuilder.fromUriString(BASE_URL)
                                             .path("/history")
-                                            .queryParam("base", fromCurrency)
-                                            .queryParam("start_at", startDate)
-                                            .queryParam("end_at", endDate)
+                                            .queryParam("base", exchangeParams.getBase())
+                                            .queryParam("start_at", exchangeParams.getStartDate())
+                                            .queryParam("end_at", exchangeParams.getEndDate())
                                             .build()
                                             .encode()
                                             .toUri();
