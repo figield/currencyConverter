@@ -75,7 +75,7 @@ public class ExchangeCalculations {
                        ratesValues.get(k)
                                   .stream()
                                   .reduce(BigDecimal.ZERO, BigDecimal::add)
-                                  .divide(getSizeOrOne(ratesValues.get(k), 0), MATH_CONTEXT)
+                                  .divide(getSize(ratesValues.get(k), 0), MATH_CONTEXT)
                    ));
 
         return averageValues;
@@ -103,20 +103,20 @@ public class ExchangeCalculations {
 
     static BigDecimal calculateStandardDeviationValue(List<BigDecimal> rateValues, BigDecimal averageValue) {
 
+        if (rateValues.size() == 1) {
+            return BigDecimal.ZERO;
+        }
+
         BigDecimal ro2 = rateValues.stream()
                                    .map(v -> v.subtract(averageValue).pow(2))
                                    .reduce((v1, v2) -> v1.add(v2))
                                    .get()
-                                   .divide(getSizeOrOne(rateValues, -1), MATH_CONTEXT);
+                                   .divide(getSize(rateValues, -1), MATH_CONTEXT);
 
         return new BigDecimal(Math.sqrt(ro2.doubleValue()), MATH_CONTEXT);
     }
 
-    static BigDecimal getSizeOrOne(List<BigDecimal> values, int modification) {
-        if (values != null && !values.isEmpty()) {
-            return BigDecimal.valueOf(values.size() + modification);
-        }
-        log.warn("getSizeOrOne: {}", values);
-        return ONE;
+    static BigDecimal getSize(List<BigDecimal> values, int modification) {
+        return BigDecimal.valueOf(values.size() + modification);
     }
 }

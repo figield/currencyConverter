@@ -84,7 +84,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler({Throwable.class})
     public ResponseEntity internalServerErrorHandler(Throwable throwable) {
 
-        log.error("Server is unable to process the request: ", throwable.getMessage());
+        log.error("Server is unable to process the request: ", throwable);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                              .contentType(MediaType.APPLICATION_JSON)
