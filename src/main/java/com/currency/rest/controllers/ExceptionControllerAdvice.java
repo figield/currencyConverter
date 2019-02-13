@@ -42,8 +42,6 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<ErrorResponse> httpClientExceptionHandler(ConstraintViolationException exception) {
 
-        log.warn("Currency name must be 3 characters long: ", exception);
-
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(ErrorResponse.of(exception.getMessage()));
@@ -53,7 +51,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler({HttpClientErrorException.class})
     public ResponseEntity<ErrorResponse> httpClientExceptionHandler(HttpClientErrorException exception) {
 
-        log.warn("Currency vendor exception: ", exception);
+        log.warn("Currency vendor exception: ", exception.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                              .contentType(MediaType.APPLICATION_JSON)
@@ -64,7 +62,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler({MethodArgumentTypeMismatchException.class})
     public ResponseEntity<ErrorResponse> httpClientExceptionHandler(MethodArgumentTypeMismatchException exception) {
 
-        log.warn("Argument type mismatch exception:", exception);
+        log.warn("Argument type mismatch exception:", exception.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                              .contentType(MediaType.APPLICATION_JSON)
