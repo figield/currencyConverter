@@ -1,7 +1,10 @@
 package com.currency.rest.controllers
 
+
 import com.currency.domain.dto.CurrencyConvertion
 import com.currency.domain.dto.ExchangeRates
+import com.currency.domain.service.ExchangeComputationService
+import com.currency.domain.service.ClientCallService
 import com.currency.domain.service.ExchangeService
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,6 +25,12 @@ class CurrencyControllerSpec extends Specification {
 
     @Autowired
     protected MockMvc mvc
+
+    @Autowired
+    ExchangeComputationService exchangeComputationService
+
+    @Autowired
+    ClientCallService exchangeRestCalls
 
     @Autowired
     ExchangeService exchangeService
@@ -98,8 +107,19 @@ class CurrencyControllerSpec extends Specification {
         DetachedMockFactory detachedMockFactory = new DetachedMockFactory()
 
         @Bean
+        ExchangeComputationService exchangeComputationService() {
+            return detachedMockFactory.Stub(ExchangeComputationService)
+        }
+
+        @Bean
+         ClientCallService clientCallService() {
+            return detachedMockFactory.Stub(ClientCallService)
+        }
+
+        @Bean
         ExchangeService exchangeService() {
             return detachedMockFactory.Stub(ExchangeService)
         }
+
     }
 }

@@ -1,25 +1,36 @@
 package com.currency.domain.service;
 
 import java.math.BigDecimal;
-import java.util.Map;
-import java.util.Optional;
 
-import com.currency.domain.dto.*;
+import com.currency.domain.dto.AverageExchangeRates;
+import com.currency.domain.dto.CurrencyConvertion;
+import com.currency.domain.dto.CurrencyStandardDeviations;
+import com.currency.domain.dto.ExchangeRates;
+import com.currency.domain.dto.HistoricalExchangeRates;
 import com.currency.domain.service.utils.DateOperations;
 import com.currency.domain.service.utils.ExchangeCalculations;
-import com.currency.domain.service.utils.ExchangeRestCalls;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class ExchangeService {
 
-    ExchangeRestCalls exchangeRestCalls;
+    @Autowired
+    ClientCallService clientCallService;
+
+    @Autowired
+    ExchangeComputationService exchangeComputationService;
 
     public ExchangeRates latest(String base) {
-        return exchangeRestCalls.getLatestExchangeRate(base);
+        return clientCallService.getLatestExchangeRate(base);
+    }
+
+    public CurrencyStandardDeviations standard_deviation(String base, String startDate, String endDate) {
+        HistoricalExchangeRates historicalExchangeRates = clientCallService.getHistoricalExchangeRates(base, startDate, endDate);
+
+        return exchangeComputationService.standard_deviation(historicalExchangeRates, base, startDate, endDate);
     }
 
     public CurrencyConvertion convert(BigDecimal fromAmount, String fromCurrency, String toCurrency) {
@@ -34,20 +45,11 @@ public class ExchangeService {
                                      .build();
         }
 
-        ExchangeRates exchangeRates = exchangeRestCalls.getLatestExchangeRate(fromCurrency);
-        BigDecimal rateValue = exchangeRates.getRates().get(toCurrency);
-        String date = exchangeRates.getDate();
-        BigDecimal exchangeValue = ExchangeCalculations.getMultiplicationValue(rateValue, fromAmount);
+        ExchangeRates exchangeRates = clientCallService.getLatestExchangeRate(fromCurrency);
 
-        return CurrencyConvertion.builder()
-                                 .date(date)
-                                 .fromAmount(fromAmount)
-                                 .fromCurrency(fromCurrency)
-                                 .toCurrency(toCurrency)
-                                 .toAmount(exchangeValue)
-                                 .build();
+        return exchangeComputationService.convert(exchangeRates, fromAmount, fromCurrency, toCurrency);
+
     }
-
 
     public AverageExchangeRates average(String fromCurrency, String toCurrency, String startDate, String endDate) {
 
@@ -61,30 +63,10 @@ public class ExchangeService {
                                        .build();
         }
 
-        BigDecimal average = ExchangeCalculations.getAverageForCurrencyValue(toCurrency,
-            Optional.of(exchangeRestCalls.getHistoricalExchangeRates(fromCurrency, startDate, endDate).getRates()));
+        HistoricalExchangeRates historicalExchangeRates = clientCallService.getHistoricalExchangeRates(fromCurrency, startDate, endDate);
 
-        return AverageExchangeRates.builder()
-                                   .startDate(startDate)
-                                   .endDate(endDate)
-                                   .from(fromCurrency)
-                                   .to(toCurrency)
-                                   .average(average)
-                                   .build();
-    }
+        return exchangeComputationService.average(historicalExchangeRates, fromCurrency,  toCurrency,  startDate,  endDate);
 
-
-    public CurrencyStandardDeviations standard_deviation(String base, String startDate, String endDate) {
-
-        Map<String, BigDecimal> ratesStandardDeviation = ExchangeCalculations.getStandardDeviationValues(
-            Optional.of(exchangeRestCalls.getHistoricalExchangeRates(base, startDate, endDate).getRates()));
-
-        return CurrencyStandardDeviations.builder()
-                                         .startDate(startDate)
-                                         .endDate(endDate)
-                                         .base(base)
-                                         .ratesStandardDeviation(ratesStandardDeviation)
-                                         .build();
     }
 
 }

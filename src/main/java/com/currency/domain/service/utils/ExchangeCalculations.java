@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,56 +18,50 @@ import static java.math.RoundingMode.HALF_UP;
 @Slf4j
 public class ExchangeCalculations {
 
-    // To have a better control over the numbers
-    private static final int PRECISION = 10;
+    private static final Integer PRECISION = 10;
+    private static final int CURRENCY_LIST_LIMIT = 33;
     private static final MathContext MATH_CONTEXT = new MathContext(PRECISION, HALF_UP);
-    private static final int CURRENCY_LIST_LIMIT = 30;
-
 
     public static BigDecimal getMultiplicationValue(BigDecimal rate, BigDecimal amount) {
         return rate.multiply(amount, MATH_CONTEXT);
     }
 
-    public static BigDecimal getAverageForCurrencyValue(String toCurrency, Optional<Map<String, Map<String, BigDecimal>>> rates) {
+    public static BigDecimal getAverageForCurrencyValue(String toCurrency, Map<String, Map<String, BigDecimal>> rates) {
 
-        if (rates.isPresent()) {
-            Collection<Map<String, BigDecimal>> values = rates.get().values();
-            int size = rates.get().values().size();
-            if (size != 0) {
+        if (rates != null) {
+            Collection<Map<String, BigDecimal>> values = rates.values();
+            if (!values.isEmpty()) {
                 return values.stream()
                              .map(m -> m.get(toCurrency))
                              .reduce(BigDecimal.ZERO, BigDecimal::add)
-                             .divide(BigDecimal.valueOf(size), MATH_CONTEXT);
+                             .divide(BigDecimal.valueOf(values.size()), MATH_CONTEXT);
             }
         }
         log.warn("getMultiplicationValue: {}", rates);
         return BigDecimal.ZERO;
-
     }
 
-    public static Map<String, BigDecimal> getStandardDeviationValues(Optional<Map<String, Map<String, BigDecimal>>> rates) {
+    public static Map<String, BigDecimal> getStandardDeviationValues(Map<String, Map<String, BigDecimal>> rates) {
 
         Map<String, List<BigDecimal>> ratesAverages = collectAndNormalizeRatesValues(rates);
 
         Map<String, BigDecimal> averageValues = calculateAverageRateForEachCurrency(ratesAverages);
 
         return calculateStandardDeviationValuesForEachCurrency(ratesAverages, averageValues);
-
     }
 
-    static Map<String, List<BigDecimal>> collectAndNormalizeRatesValues(Optional<Map<String, Map<String, BigDecimal>>> rates) {
+    static Map<String, List<BigDecimal>> collectAndNormalizeRatesValues(Map<String, Map<String, BigDecimal>> rates) {
 
         Map<String, List<BigDecimal>> ratesValues = new HashMap<>();
-
-        rates.get()
-             .values()
-             .forEach(d -> d.keySet()
-                            .forEach(k -> {
-                                List<BigDecimal> l = ratesValues.getOrDefault(k, new ArrayList<>());
-                                l.add(ONE.divide(d.get(k), MATH_CONTEXT));    // Normalize values
-                                ratesValues.put(k, l);
-                            }));
-
+        if (rates != null) {
+            rates.values()
+                 .forEach(d -> d.keySet()
+                                .forEach(k -> {
+                                    List<BigDecimal> l = ratesValues.getOrDefault(k, new ArrayList<>());
+                                    l.add(ONE.divide(d.get(k), MATH_CONTEXT));    // Normalize values
+                                    ratesValues.put(k, l);
+                                }));
+        }
         return ratesValues;
     }
 
@@ -119,9 +112,9 @@ public class ExchangeCalculations {
         return new BigDecimal(Math.sqrt(ro2.doubleValue()), MATH_CONTEXT);
     }
 
-    static BigDecimal getSizeOrOne(List<BigDecimal> values, int modificator) {
+    static BigDecimal getSizeOrOne(List<BigDecimal> values, int modification) {
         if (values != null && !values.isEmpty()) {
-            return BigDecimal.valueOf(values.size() + modificator);
+            return BigDecimal.valueOf(values.size() + modification);
         }
         log.warn("getSizeOrOne: {}", values);
         return ONE;

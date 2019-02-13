@@ -7,11 +7,11 @@ import java.util.Date;
 
 import javax.validation.constraints.Size;
 
+import com.currency.domain.service.ExchangeService;
 import com.currency.rest.dto.AverageExchangeRatesResponse;
 import com.currency.rest.dto.CurrencyConvertionResponse;
 import com.currency.rest.dto.CurrencyStandardDeviationsResponse;
 import com.currency.rest.dto.LatestExchangeRatesResponse;
-import com.currency.domain.service.ExchangeService;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
-// TODO: move configuration to property, ex: URL=https://api.exchangeratesapi.io
 
 @RestController
 @AllArgsConstructor

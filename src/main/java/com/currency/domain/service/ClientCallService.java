@@ -1,22 +1,21 @@
-package com.currency.domain.service.utils;
+package com.currency.domain.service;
 
 import java.net.URI;
 
 import com.currency.domain.dto.ExchangeRates;
 import com.currency.domain.dto.HistoricalExchangeRates;
-import com.currency.domain.service.RestOperation;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class ExchangeRestCalls {
+public class ClientCallService {
 
     private RestOperation restOperation;
     private String BASE_URL;
 
-    public ExchangeRates getLatestExchangeRate(String base) {
+    ExchangeRates getLatestExchangeRate(String base) {
 
         URI targetUrl = UriComponentsBuilder.fromUriString(BASE_URL)
                                             .path("/latest")
@@ -29,7 +28,7 @@ public class ExchangeRestCalls {
     }
 
 
-    public HistoricalExchangeRates getHistoricalExchangeRates(String fromCurrency, String startDate, String endDate) {
+    HistoricalExchangeRates getHistoricalExchangeRates(String fromCurrency, String startDate, String endDate) {
         URI targetUrl = UriComponentsBuilder.fromUriString(BASE_URL)
                                             .path("/history")
                                             .queryParam("base", fromCurrency)
