@@ -33,6 +33,14 @@ public class CurrencyController {
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final String currencyLengthMsg = "Currency name must be 3 characters long";
 
+
+    @RequestMapping("/health")
+    @GetMapping()
+    public String healthCheck() {
+        return "I am alive!";
+    }
+
+
     @Cacheable(value = "latest")
     @RequestMapping("/latest")
     @GetMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
