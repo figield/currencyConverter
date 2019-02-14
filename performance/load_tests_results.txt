@@ -1,18 +1,21 @@
+
+
+
  Name                                                          # reqs      # fails     Avg     Min     Max  |  Median   req/s
 --------------------------------------------------------------------------------------------------------------------------------------------
- GET Convert amount of currencyFrom to currencyTo               28193     2(0.01%)     560      39  145920  |     130  109.50
- GET Get average currency value in the last 10 days             28230     0(0.00%)     454      40  196225  |      83  116.10
- GET Get standard deviation value in the last 10 days           28080     0(0.00%)     406      40  113316  |      82  110.80
- GET Get the latest currency                                    28125     2(0.01%)     385      42  232780  |      82  120.80
+ GET Convert amount of currencyFrom to currencyTo              160399     6(0.00%)     778      89 1193606  |     270  119.30
+ GET Get average currency value in the last 10 days            160807     1(0.00%)     642      85 1191391  |     160  121.50
+ GET Get standard deviation value in the last 10 days          160415     0(0.00%)     585      89  640782  |     150  119.70
+ GET Get the latest currency                                   160621     1(0.00%)     617      89  640575  |     160  112.80
 --------------------------------------------------------------------------------------------------------------------------------------------
- Total                                                         112628     4(0.00%)                                     457.20
+ Total                                                         642242     8(0.00%)                                     473.30
 
 Percentage of the requests completed within given times
  Name                                                           # reqs    50%    66%    75%    80%    90%    95%    98%    99%   100%
 --------------------------------------------------------------------------------------------------------------------------------------------
- GET Convert amount of currencyFrom to currencyTo                28193    130    320    360    470   1300   1700   3300   5600 146000
- GET Get average currency value in the last 10 days              28230     83    100    140    220    680   1400   3300   5600 196000
- GET Get standard deviation value in the last 10 days            28080     82     98    120    170    590   1200   2900   5300 113000
- GET Get the latest currency                                     28125     82     98    130    170    590   1100   2800   5000 233000
+ GET Convert amount of currencyFrom to currencyTo               160399    270    310    480    700   1400   1900   3800   6200 1194000
+ GET Get average currency value in the last 10 days             160807    160    190    260    330    820   1500   3500   5800 1191000
+ GET Get standard deviation value in the last 10 days           160415    150    180    220    290    740   1400   3600   6000 641000
+ GET Get the latest currency                                    160621    160    180    220    290    750   1400   3600   6000 641000
 --------------------------------------------------------------------------------------------------------------------------------------------
- Total                                                          112628     86    110    220    320    750   1500   3100   5400 233000
+ Total                                                          642242    160    230    290    390    990   1700   3600   6000 1194000
