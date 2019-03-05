@@ -36,7 +36,7 @@ In your current setup you don’t have ability to create a persistent storage
 - [x] Cache: Ehcache
 - [x] Functional tests: Spock, Groovy, Spring Mock MVC
 - [x] Algorithm used to calculate the highest stability in price: Standard Deviation
-- [x] Deployed: AWS ([Maybe it is still here](http://curexchange-env.rtzvznrmps.eu-west-1.elasticbeanstalk.com/convert?fromamount=0&to=PLN&from=SEK))
+- [x] Deployed: AWS ([Maybe it is still here](http://currency.rtzvznrmps.eu-west-1.elasticbeanstalk.com/convert?fromamount=1&to=EUR&from=PLN))
 - [x] Performance tests: LOCUST and custom tests in Python
 - [x] Solution time: 3 days
 
